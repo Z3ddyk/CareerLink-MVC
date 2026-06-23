@@ -1,0 +1,98 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <i class="bi bi-person-plus display-6"></i>
+                <h4 class="mt-2 mb-0">Create Account</h4>
+                <p class="small mb-0 opacity-75">Join CareerLink today</p>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
+
+                    <!-- Account Type -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">I want to</label>
+                        <div class="d-flex gap-3">
+                            <div class="flex-fill">
+                                <input type="radio" class="btn-check" name="Role" id="role-seeker" value="job_seeker" checked>
+                                <label class="btn btn-outline-primary w-100" for="role-seeker">
+                                    <i class="bi bi-person-workspace d-block mb-1"></i>Find a Job
+                                </label>
+                            </div>
+                            <div class="flex-fill">
+                                <input type="radio" class="btn-check" name="Role" id="role-employer" value="employer">
+                                <label class="btn btn-outline-success w-100" for="role-employer">
+                                    <i class="bi bi-building d-block mb-1"></i>Hire Talent
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Name (employer only) -->
+                    <div class="mb-3" id="companyNameField" style="display:none;">
+                        <label asp-for="CompanyName" class="form-label fw-semibold"></label>
+                        <input asp-for="CompanyName" class="form-control" placeholder="e.g. Safaricom PLC" />
+                        <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label fw-semibold"></label>
+                        <input asp-for="FullName" class="form-control" placeholder="Your full name" />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Email" class="form-control" placeholder="your@email.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label fw-semibold"></label>
+                        <input asp-for="Password" class="form-control" placeholder="At least 6 characters" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat your password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        <i class="bi bi-person-check me-2"></i>Create Account
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer text-center text-muted py-3">
+                Already have an account? <a asp-action="Login" class="text-primary">Login here</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const seekerBtn = document.getElementById('role-seeker');
+    const employerBtn = document.getElementById('role-employer');
+    const companyField = document.getElementById('companyNameField');
+
+    function toggleCompany() {
+        companyField.style.display = document.getElementById('role-employer').checked ? 'block' : 'none';
+    }
+    seekerBtn.addEventListener('change', toggleCompany);
+    employerBtn.addEventListener('change', toggleCompany);
+
+    // Check on load in case of validation error re-render
+    if (@(Model.Role == "employer" ? "true" : "false")) {
+        document.getElementById('role-employer').checked = true;
+        companyField.style.display = 'block';
+    }
+</script>
+}

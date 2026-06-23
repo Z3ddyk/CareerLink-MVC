@@ -1,0 +1,149 @@
+@model ViewApplicationsViewModel
+@{
+    ViewData["Title"] = "Applications for " + Model.Job.Title;
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Dashboard" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Dashboard
+    </a>
+    <div class="flex-grow-1">
+        <h3 class="fw-bold mb-0">Applications for: @Model.Job.Title</h3>
+        <div class="text-muted small">
+            @Model.Job.Location &bull; @Model.Job.JobType.ToUpperInvariant() &bull;
+            <span class="badge bg-@(Model.Job.Status == "active" ? "success" : "secondary")">@Model.Job.Status.ToUpperInvariant()</span>
+        </div>
+    </div>
+    <span class="badge bg-primary fs-6 px-3 py-2">@Model.Applications.Count application@(Model.Applications.Count != 1 ? "s" : "")</span>
+</div>
+
+@if (!Model.Applications.Any())
+{
+    <div class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted"></i>
+        <h4 class="mt-3 text-muted">No Applications Yet</h4>
+        <p class="text-muted">Candidates will appear here once they apply for this position.</p>
+    </div>
+}
+else
+{
+    <!-- Status Filter Summary -->
+    <div class="row g-2 mb-4">
+        @{
+            var statusCounts = new[] { "pending", "reviewed", "shortlisted", "hired", "rejected" }
+                .Select(s => (Status: s, Count: Model.Applications.Count(a => a.Status == s)))
+                .ToList();
+        }
+        @foreach (var sc in statusCounts)
+        {
+            var color = sc.Status switch
+            {
+                "pending" => "warning",
+                "reviewed" => "primary",
+                "shortlisted" => "success",
+                "hired" => "info",
+                "rejected" => "danger",
+                _ => "secondary"
+            };
+            var hiredStyle = sc.Status == "hired" ? "background-color:#f3e8ff;" : "";
+            <div class="col-auto">
+                <div class="card border-0 px-3 py-2 text-center bg-@(color) bg-opacity-10" style="min-width: 90px; @hiredStyle">
+                    <div class="fw-bold text-@color">@sc.Count</div>
+                    <div class="small text-muted text-capitalize">@sc.Status</div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @foreach (var app in Model.Applications)
+    {
+        var badgeClass = app.Status switch
+        {
+            "pending" => "status-pending",
+            "reviewed" => "status-reviewed",
+            "shortlisted" => "status-shortlisted",
+            "rejected" => "status-rejected",
+            "hired" => "status-hired",
+            _ => "bg-secondary text-white"
+        };
+
+        <div class="card border-0 shadow-sm mb-3" id="app-@app.Id">
+            <div class="card-body p-4">
+                <div class="row g-3 align-items-start">
+                    <!-- Applicant Info -->
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width:45px;height:45px;font-size:1.1rem;">
+                                @app.JobSeekerProfile.User.FullName.Substring(0, 1).ToUpper()
+                            </div>
+                            <div>
+                                <div class="fw-semibold">@app.JobSeekerProfile.User.FullName</div>
+                                <div class="small text-muted">@app.JobSeekerProfile.User.Email</div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(app.JobSeekerProfile.Headline))
+                        {
+                            <div class="small text-muted mb-1"><i class="bi bi-person-workspace me-1"></i>@app.JobSeekerProfile.Headline</div>
+                        }
+                        @if (app.JobSeekerProfile.YearsExperience.HasValue)
+                        {
+                            <div class="small text-muted mb-1"><i class="bi bi-award me-1"></i>@app.JobSeekerProfile.YearsExperience years experience</div>
+                        }
+                        @if (app.JobSeekerProfile.SeekerSkills.Any())
+                        {
+                            <div class="d-flex flex-wrap gap-1 mt-2">
+                                @foreach (var ss in app.JobSeekerProfile.SeekerSkills.Take(4))
+                                {
+                                    <span class="badge bg-light text-dark border small">@ss.Skill.Name</span>
+                                }
+                            </div>
+                        }
+                        <div class="mt-2 small text-muted">
+                            Applied: @app.AppliedAt.ToString("MMM dd, yyyy")
+                        </div>
+                    </div>
+
+                    <!-- Cover Letter Preview -->
+                    <div class="col-md-4">
+                        <div class="small text-muted fw-semibold mb-1">Cover Letter</div>
+                        <div class="small text-truncate-3 bg-light p-2 rounded" style="max-height: 100px; overflow: hidden; font-size: 0.8rem;">
+                            @(app.CoverLetter?.Length > 300 ? app.CoverLetter.Substring(0, 300) + "..." : app.CoverLetter ?? "No cover letter provided.")
+                        </div>
+                    </div>
+
+                    <!-- Status Update Form -->
+                    <div class="col-md-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge @badgeClass px-3 py-2">@app.Status.ToUpperInvariant()</span>
+                        </div>
+
+                        <form asp-action="UpdateApplicationStatus" method="post">
+                            <input type="hidden" name="applicationId" value="@app.Id" />
+                            <input type="hidden" name="jobId" value="@Model.Job.Id" />
+
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Update Status</label>
+                                <select name="status" class="form-select form-select-sm">
+                                    @foreach (var s in new[] { "pending", "reviewed", "shortlisted", "hired", "rejected" })
+                                    {
+                                        <option value="@s" selected="@(app.Status == s)">@s.ToUpperInvariant()</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Private Notes</label>
+                                <textarea name="notes" class="form-control form-control-sm" rows="2"
+                                    placeholder="Internal notes (not visible to applicant)">@app.EmployerNotes</textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                <i class="bi bi-save me-1"></i>Update
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

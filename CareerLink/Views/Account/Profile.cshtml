@@ -1,0 +1,117 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:60px;height:60px;font-size:1.5rem;">
+                <i class="bi bi-person"></i>
+            </div>
+            <div>
+                <h3 class="mb-0">@ViewBag.UserName</h3>
+                <span class="text-muted">@(Model.Headline ?? "Update your profile to stand out")</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-action="Profile" method="post">
+    <div class="row g-4">
+        <!-- Left: Profile Info -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold py-3">
+                    <i class="bi bi-person-lines-fill me-2 text-primary"></i>Basic Information
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <label asp-for="Headline" class="form-label fw-semibold"></label>
+                        <input asp-for="Headline" class="form-control" placeholder="e.g. Senior Software Engineer | 5 years experience" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Bio" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Tell employers about yourself..."></textarea>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label fw-semibold"></label>
+                            <input asp-for="Phone" class="form-control" placeholder="+254 7XX XXX XXX" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Location" class="form-label fw-semibold"></label>
+                            <input asp-for="Location" class="form-control" placeholder="e.g. Nairobi, Kenya" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold py-3">
+                    <i class="bi bi-tools me-2 text-primary"></i>Skills
+                </div>
+                <div class="card-body p-4">
+                    <label asp-for="SkillsText" class="form-label fw-semibold"></label>
+                    <input asp-for="SkillsText" class="form-control" placeholder="Python, React, Data Analysis, Project Management..." />
+                    <div class="form-text">Enter skills separated by commas. These are matched against job requirements.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Links & Details -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold py-3">
+                    <i class="bi bi-info-circle me-2 text-primary"></i>Career Details
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <label asp-for="YearsExperience" class="form-label fw-semibold"></label>
+                        <input asp-for="YearsExperience" type="number" min="0" max="50" class="form-control" placeholder="e.g. 3" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Availability" class="form-label fw-semibold"></label>
+                        <select asp-for="Availability" class="form-select">
+                            <option value="">-- Select --</option>
+                            <option value="immediately">Immediately</option>
+                            <option value="two_weeks">2 Weeks Notice</option>
+                            <option value="one_month">1 Month Notice</option>
+                            <option value="not_looking">Not Currently Looking</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold py-3">
+                    <i class="bi bi-link-45deg me-2 text-primary"></i>Online Presence
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <label asp-for="LinkedinUrl" class="form-label fw-semibold">
+                            <i class="bi bi-linkedin me-1 text-primary"></i>LinkedIn
+                        </label>
+                        <input asp-for="LinkedinUrl" class="form-control" placeholder="https://linkedin.com/in/..." />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="GithubUrl" class="form-label fw-semibold">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </label>
+                        <input asp-for="GithubUrl" class="form-control" placeholder="https://github.com/..." />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="PortfolioUrl" class="form-label fw-semibold">
+                            <i class="bi bi-globe me-1 text-success"></i>Portfolio
+                        </label>
+                        <input asp-for="PortfolioUrl" class="form-control" placeholder="https://yoursite.com" />
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                <i class="bi bi-save me-2"></i>Save Profile
+            </button>
+        </div>
+    </div>
+</form>
