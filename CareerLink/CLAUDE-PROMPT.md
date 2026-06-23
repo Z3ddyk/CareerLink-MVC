@@ -1,35 +1,3 @@
-You are building **CareerLink**, an ASP.NET Core MVC (.NET 8) job portal for Kenya. Think of it as a simpler LinkedIn focused on connecting Kenyan employers with job seekers and reducing unemployment. This is a university unit project (CMT 307 — .NET Programming) with a **live demo presentation on 1st July 2026**. It must actually run — no files are submitted, just a working demo.
-
-## Environment
-
-- **OS:** Fedora Linux
-- **IDE:** VS Code with C# Dev Kit
-- **Framework:** ASP.NET Core MVC, .NET 8
-- **Database:** SQLite via EF Core (connection string: `Data Source=CareerLink.db`)
-- **Front-end:** Bootstrap 5 (CDN), Bootstrap Icons
-- **Auth:** Manual session-based (HttpContext.Session), password hashing via `Microsoft.AspNetCore.Identity.PasswordHasher<User>`
-- **No Docker, no SQL Server, no external APIs**
-
-## What Already Exists
-
-The project scaffold is already created and builds successfully. Here's what's done:
-
-- `CareerLink.csproj` with all NuGet packages (EF Core SQLite, Identity.EntityFrameworkCore)
-- `Program.cs` configured with SQLite DbContext, session middleware
-- `Data/ApplicationDbContext.cs` with all 10 DbSets and unique index constraints
-- All 10 model classes in `Models/` with proper FK relationships and navigation properties
-- `Views/Shared/_Layout.cshtml` — Bootstrap 5 layout with navbar (shows Login/Register when logged out, username + Logout when logged in, using session)
-- `Views/Home/Index.cshtml` — landing page (working)
-- `Controllers/HomeController.cs` — basic home controller
-- `Migrations/` — InitialCreate migration already applied, `CareerLink.db` exists
-- `.gitignore`, `.vscode/` configs
-
-**Everything else is empty stub folders.** The Views/Account, Views/Job, Views/Employer, Views/Admin folders exist but are empty. No controllers exist except HomeController. All navbar links (Browse Jobs, Login, Register) lead to errors.
-
-## What You Must Build
-
-Build the complete working application. Every page must be functional with real database CRUD operations, not placeholder/static content. After you finish, I should be able to: register as a job seeker, log in, browse jobs, apply to a job, save a job; register as an employer, log in, post a job, view applicants, change application status; log in as admin, see dashboard stats, manage users and jobs.
-
 ## Marking Criteria (50 marks total)
 
 1. **Database in a DBMS (10 marks)** — DONE (SQLite + EF Core migrations)
