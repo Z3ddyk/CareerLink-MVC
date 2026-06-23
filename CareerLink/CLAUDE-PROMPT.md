@@ -1,9 +1,3 @@
-# CareerLink — Full Project Build Prompt
-
-Paste everything below the line into Claude CLI when inside the `CareerLink/` project directory.
-
----
-
 You are building **CareerLink**, an ASP.NET Core MVC (.NET 8) job portal for Kenya. Think of it as a simpler LinkedIn focused on connecting Kenyan employers with job seekers and reducing unemployment. This is a university unit project (CMT 307 — .NET Programming) with a **live demo presentation on 1st July 2026**. It must actually run — no files are submitted, just a working demo.
 
 ## Environment
